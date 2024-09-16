@@ -3,20 +3,26 @@ import os
 from datetime import datetime
 from functions import convert_tc, convert_keywords, convert_date, load_headers, combine_genres, combine_talent
 
+# Gets file path of script
 base_file_path = os.path.realpath(__file__)
+# Gets base path (Example /Users/Ralph.Pura/Desktop...)
 base = os.path.dirname(base_file_path)
 
+# Creates path for required data
 header_path = base + '/data/headers/3.0_Headers.csv'
 data_path = base + '/data/input/'
 output_path = base + '/data/output/'
 
+# Gets names for all files within /data/input folder
 files = os.listdir(data_path)
+# Gets number of files in /data/input folder
 num_entries = len(files)
 
 num_selection = 1
 
 print("Files found:")
 for each in files:
+    # Ignores .DS_Store file
     if each != '.DS_Store':
         print('\t' + str(num_selection) + '. ' + each)
         num_selection += 1
@@ -40,6 +46,7 @@ print('File selected: ' + files[selection])
 genre_dict = {}
 actor_dict = {}
 
+# First pass of csv file and gets information for genres and actors. Also dedupes list.
 with open(data_file, encoding='utf-8-sig') as file:
     reader = csv.reader(file)
     #print(reader)
@@ -51,7 +58,7 @@ with open(data_file, encoding='utf-8-sig') as file:
         elif row[0] in genre_dict and row[13] not in genre_dict[row[0]]:
             genre_dict[row[0]].append(row[13])
 
-        # Uncomment this when talent is added
+        # Rearranges name. Example: Last, First => First Last;Role
         print(row[10])
         first = row[10].split(', ')[1]
         last = row[10].split(',')[0]
@@ -62,23 +69,28 @@ with open(data_file, encoding='utf-8-sig') as file:
         elif row[0] in actor_dict and name not in actor_dict[row[0]]:
             actor_dict[row[0]].append(name)
 
-print(genre_dict)
-print(actor_dict)
+# Used for debugging
+#print(genre_dict)
+#print(actor_dict)
 
 output_data = []
 output_data.append(load_headers(header_path))
 
 completed_house_numbers = []
 
+# Begins filling array with pertinent data
 with open(data_file, encoding='UTF-8-SIG') as file:
     reader = csv.reader(file)
     next(reader)
 
     for row in reader:
+        # Iterates through each row to find if FireTV is the platform
         if 'Fire TV' in row:
             if row[0] == '':
                 break
             print('Checking: ' + row[0])
+
+            # Checks if house number has already been added
             if row[0] in completed_house_numbers:
                 print(row[0] + ' found in completed_house_numbers\n')
                 continue
@@ -193,9 +205,12 @@ with open(data_file, encoding='UTF-8-SIG') as file:
 # for each in output_data:
 #     print(each)
 
+# Gets current date and time
 date = datetime.now()
+# Sets output file date/time
 output_file = output_path + 'output_' + date.strftime('%Y_%m_%d_%H%M%S') + '.csv'
 
+# Writes data into output file.
 with open(output_file, 'w', encoding='utf-8-sig', newline='') as outfile:
     writer = csv.writer(outfile)
     writer.writerows(output_data)

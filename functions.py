@@ -17,7 +17,7 @@ def convert_tc(tcs):
 
     return converted_string[:-1]
 
-
+# Removes spaces in between keywords. Example 'Action, Adventure, Animals' => 'Action,Adventure,Animals'
 def convert_keywords(keywords):
     print('\tConverting: ' + keywords, end=' ')
     keywords_array = keywords.split(',')
@@ -65,6 +65,7 @@ def convert_date(date):
 
     return converted_date
 
+# Loads file headers from headers.csv
 def load_headers(header_file):
 
     header = []
@@ -77,6 +78,8 @@ def load_headers(header_file):
 
     return header
 
+# Gets talent array from specific house number and combines it. Returns string
+# Example: [Isaac Carter;Talent, Brook Carter;Talent] => Isaac Carter;Talent | Brook Carter;Talent]
 def combine_talent(talent_arr):
     output = ''
 
