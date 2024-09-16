@@ -59,7 +59,7 @@ with open(data_file, encoding='utf-8-sig') as file:
             genre_dict[row[0]].append(row[13])
 
         # Rearranges name. Example: Last, First => First Last;Role
-        print(row[10])
+        #print(row[10])
         first = row[10].split(', ')[1]
         last = row[10].split(',')[0]
         name = first + ' ' + last + ';' + row[11]
