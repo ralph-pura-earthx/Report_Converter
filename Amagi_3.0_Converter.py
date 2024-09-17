@@ -35,7 +35,11 @@ output_path = base + '/data/output/'
 
 # Gets names for all files within /data/input folder
 files = os.listdir(data_path)
-files.remove('.DS_Store')
+
+if '.DS_Store' in files:
+    files.remove('.DS_Store')
+else:
+    print('.DS_Store file not found')
 print(files)
 
 # Gets number of files in /data/input folder
