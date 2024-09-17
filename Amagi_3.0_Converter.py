@@ -1,10 +1,30 @@
 import csv
 import os
 from datetime import datetime
+from time import sleep
 from functions import convert_tc, convert_keywords, convert_date, load_headers, combine_genres, combine_talent
+
+confirmation = ''
+
+while confirmation.lower() != 'yes' and confirmation.lower() != 'no':
+    print('Beginning Report Conversion')
+    print('Report Conversion Checklist:')
+    print('\t1. Removed top two rows (Report Title and empty line')
+    print('\t2. File saved as a .csv')
+    print('\t3. File saved in \"input\" folder')
+    confirmation = input('Continue? (Yes or No): ')
+    if confirmation.lower() == 'yes':
+        print('Beginning conversion')
+    elif confirmation.lower() == 'no':
+        print('Exiting')
+        exit(1)
+    else:
+        print('Incorrect input detected. Please try again.\n')
+        sleep(1)
 
 # Gets file path of script
 base_file_path = os.path.realpath(__file__)
+
 # Gets base path (Example /Users/Ralph.Pura/Desktop...)
 base = os.path.dirname(base_file_path)
 
@@ -15,6 +35,9 @@ output_path = base + '/data/output/'
 
 # Gets names for all files within /data/input folder
 files = os.listdir(data_path)
+files.remove('.DS_Store')
+print(files)
+
 # Gets number of files in /data/input folder
 num_entries = len(files)
 
@@ -33,20 +56,21 @@ selection = 0
 while selection < 1 or selection > num_entries-1:
     try:
         selection = int(input('Select file to load: '))
-        if selection == 1 or selection > num_entries-1:
+        if selection == 0 or selection > num_entries-1:
             print('Incorrect input. Please select a number between 1 and ' + str(num_selection-1))
     except ValueError:
         print('Error: Non-numeric character detected. Please select a number between 1 and ' + str(num_selection-1))
         pass
 
-data_file = data_path + '/' + files[selection]
+data_file = data_path + '/' + files[selection-1]
 
-print('File selected: ' + files[selection])
+print('File selected: ' + files[selection-1])
+sleep(2)
 
 genre_dict = {}
 actor_dict = {}
 
-# First pass of csv file and gets information for genres and actors. Also dedupes list.
+# First pass of csv file and gets information for genres and actors. Also, dedupes list.
 with open(data_file, encoding='utf-8-sig') as file:
     reader = csv.reader(file)
     #print(reader)
